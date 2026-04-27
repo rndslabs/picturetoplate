@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Pic-to-Plate · Build</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,30..100;1,9..144,300..500,30..100&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="screens/brand.css" />
+<style>
+  html, body { margin:0; padding:0; background: var(--paper); color: var(--ink); }
+  body { font-family: 'Inter', system-ui, sans-serif; padding: 56px 64px 96px; max-width: 1100px; margin: 0 auto; }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: 64px; line-height: 1; letter-spacing: -0.025em; margin: 0 0 14px; }
+  .lede { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 20px; color: var(--ink-2); max-width: 640px; margin: 0 0 56px; line-height: 1.45; }
+  .group { margin-top: 48px; }
+  .group h2 { font-family: var(--serif); font-weight: 400; font-size: 24px; letter-spacing: -0.01em; margin: 0 0 18px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  a.card { display: block; text-decoration: none; color: inherit; background: var(--paper-2); border: 1px solid var(--hairline-2); border-radius: 18px; padding: 22px; transition: transform .12s, border-color .12s, background .12s; }
+  a.card:hover { transform: translateY(-2px); border-color: var(--sage); background: var(--paper); }
+  .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); display: flex; justify-content: space-between; margin-bottom: 14px; }
+  .title { font-family: var(--serif); font-size: 22px; line-height: 1.1; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .desc { font-family: var(--sans); font-size: 13px; color: var(--ink-2); line-height: 1.45; }
+  .file { margin-top: 16px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.04em; }
+  .dot { display:inline-block; width:6px; height:6px; border-radius:999px; background:var(--sage); margin-right:8px; vertical-align:middle; }
+  pre.tree { font-family: var(--mono); font-size: 12px; color: var(--ink-2); background: var(--paper-2); padding: 22px; border-radius: 14px; line-height: 1.7; overflow: auto; }
+  pre.tree b { color: var(--ink); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<div style="font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 18px;">
+  <span class="dot"></span>pic — to — plate · build
+</div>
+
+<h1>Pic-to-Plate.</h1>
+<p class="lede">Brand kit and HF wireframes for the Ingredients Input flow. The folder structure is ready to commit to your repo as-is.</p>
+
+<div class="group">
+  <h2>Brand</h2>
+  <div class="grid">
+    <a class="card" href="brand/Brand Spec.html">
+      <div class="meta"><span>Spec sheet</span><span>HTML</span></div>
+      <div class="title">Brand &amp; Screens canvas</div>
+      <div class="desc">Identity sheet plus all four screens on a single design canvas. Tweaks panel for live theme/accent.</div>
+      <div class="file">brand/Brand Spec.html</div>
+    </a>
+  </div>
+</div>
+
+<div class="group">
+  <h2>Mobile (iOS)</h2>
+  <div class="grid">
+    <a class="card" href="screens/mobile/ios-detected.html">
+      <div class="meta"><span>A · photo-first</span><span>iOS</span></div>
+      <div class="title">Detected</div>
+      <div class="desc">AI marks ingredients on the shelf, user confirms with qty/unit pills.</div>
+      <div class="file">screens/mobile/ios-detected.html</div>
+    </a>
+    <a class="card" href="screens/mobile/ios-conversation.html">
+      <div class="meta"><span>B · voice-first</span><span>iOS</span></div>
+      <div class="title">Conversation</div>
+      <div class="desc">Tap-to-talk transcript. Ingredients pulled out as inline chips.</div>
+      <div class="file">screens/mobile/ios-conversation.html</div>
+    </a>
+    <a class="card" href="screens/mobile/ios-pantry-grid.html">
+      <div class="meta"><span>C · text-first</span><span>iOS</span></div>
+      <div class="title">Pantry Grid</div>
+      <div class="desc">Predictive type-ahead with always-on staples and a tactile basket.</div>
+      <div class="file">screens/mobile/ios-pantry-grid.html</div>
+    </a>
+  </div>
+</div>
+
+<div class="group">
+  <h2>Web</h2>
+  <div class="grid">
+    <a class="card" href="screens/web/web-ingredients.html">
+      <div class="meta"><span>D · desktop</span><span>Web</span></div>
+      <div class="title">Ingredients (two-pane)</div>
+      <div class="desc">Tri-input dropzone on the left, single live list on the right with provenance tags.</div>
+      <div class="file">screens/web/web-ingredients.html</div>
+    </a>
+  </div>
+</div>
+
+<div class="group">
+  <h2>Folder structure</h2>
+<pre class="tree">build/
+├── <b>index.html</b>                     ← you are here
+├── <b>brand/</b>
+│   ├── Brand Spec.html              ← brand sheet + canvas
+│   ├── brand.css                    ← design tokens (master copy)
+│   ├── brand-card.jsx               ← brand specimen component
+│   ├── design-canvas.jsx
+│   ├── tweaks-panel.jsx
+│   ├── ios-frame.jsx
+│   ├── p2p-mobile.jsx
+│   └── p2p-web.jsx
+└── <b>screens/</b>
+    ├── brand.css                    ← shared by mobile + web
+    ├── mobile/
+    │   ├── ios-frame.jsx
+    │   ├── p2p-mobile.jsx           ← ScreenDetected · Conversation · PantryGrid
+    │   ├── ios-detected.html
+    │   ├── ios-conversation.html
+    │   └── ios-pantry-grid.html
+    └── web/
+        ├── p2p-web.jsx              ← ScreenWeb
+        └── web-ingredients.html
+</pre>
+</div>
+
+</body>
+</html>
