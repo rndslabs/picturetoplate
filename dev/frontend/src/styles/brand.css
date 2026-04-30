@@ -1,0 +1,154 @@
+/* Pic-to-Plate brand tokens — single source of truth for all CSS custom properties */
+:root {
+  /* Surface colors */
+  --paper:   #F6F3EC;
+  --paper-2: #EFEAE0;
+  --cream:   #ECE5D5;
+
+  /* Text colors */
+  --ink:   #1B2420;
+  --ink-2: #3A4641;
+  --ink-3: #6B7570;
+
+  /* Dividers */
+  --hairline:   rgba(27, 36, 32, 0.10);
+  --hairline-2: rgba(27, 36, 32, 0.06);
+
+  /* Sage — fresh accent */
+  --sage:      #6B8A5A;
+  --sage-deep: #4F6B43;
+  --sage-soft: #DCE5CF;
+
+  /* Apricot — warm accent */
+  --apricot:      #E8A579;
+  --apricot-deep: #C97F50;
+  --apricot-soft: #F5DEC9;
+
+  /* Alert / recording */
+  --tomato: #C2543C;
+
+  /* Typography */
+  --serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --sans:  'Inter', -apple-system, system-ui, sans-serif;
+  --mono:  'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Radii */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+}
+
+/* Dark mode — toggle by adding .theme-dark to <html> or <body> */
+.theme-dark {
+  --paper:   #14161A;
+  --paper-2: #1B1F22;
+  --cream:   #232729;
+  --ink:     #F1ECE0;
+  --ink-2:   #C8C2B4;
+  --ink-3:   #8A8678;
+  --hairline:   rgba(241, 236, 224, 0.10);
+  --hairline-2: rgba(241, 236, 224, 0.06);
+  --sage-soft:    #2C3A26;
+  --apricot-soft: #3A2A1F;
+}
+
+/* Utility classes used across components */
+.p2p-mono {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.p2p-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--sage);
+  vertical-align: middle;
+}
+
+/* Photo placeholder — warm diagonal stripe pattern */
+.p2p-photo-ph {
+  background-image:
+    repeating-linear-gradient(
+      135deg,
+      rgba(27, 36, 32, 0.04) 0 8px,
+      rgba(27, 36, 32, 0.00) 8px 18px
+    ),
+    linear-gradient(180deg, #E8E0D2, #D9D0BD);
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Shimmer — used for AI loading states */
+@keyframes p2p-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.p2p-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(107, 138, 90, 0.15) 25%,
+    rgba(107, 138, 90, 0.35) 50%,
+    rgba(107, 138, 90, 0.15) 75%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: p2p-shimmer 2.4s linear infinite;
+}
+
+/* Buttons */
+.p2p-btn {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.12s, background 0.12s;
+}
+
+.p2p-btn:active {
+  transform: translateY(1px);
+}
+
+.p2p-btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 999px;
+  padding: 14px 22px;
+}
+
+.p2p-btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 13px 20px;
+}
+
+/* Global reset — no margin on body, full-height layout */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+}
