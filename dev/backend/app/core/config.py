@@ -1,5 +1,9 @@
 from functools import lru_cache
+from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Resolve dev/.env regardless of the working directory uvicorn is started from.
+_ENV_FILE = Path(__file__).parent.parent.parent.parent / ".env"
 
 
 class Settings(BaseSettings):
@@ -29,9 +33,10 @@ class Settings(BaseSettings):
     rate_limit_rpm: int = 20
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=str(_ENV_FILE),
         env_file_encoding="utf-8",
         case_sensitive=False,
+        extra="ignore",
     )
 
 

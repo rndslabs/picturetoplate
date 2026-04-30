@@ -6,21 +6,21 @@ import type { SessionIngredientRead } from '../../types/ingredient'
 interface TriInputZoneProps {
   sessionId: string
   detectedCount: number
+  isDetecting: boolean
   isRecording: boolean
   onToggleRecording: () => void
   onAddIngredient: (ing: SessionIngredientRead) => void
-  onRetakePhoto: () => void
-  onAddAnotherPhoto: () => void
+  onFileSelected: (file: File) => void
 }
 
 export default function TriInputZone({
   sessionId,
   detectedCount,
+  isDetecting,
   isRecording,
   onToggleRecording,
   onAddIngredient,
-  onRetakePhoto,
-  onAddAnotherPhoto,
+  onFileSelected,
 }: TriInputZoneProps) {
   return (
     <div
@@ -36,10 +36,15 @@ export default function TriInputZone({
     >
       <PhotoCapture
         detectedCount={detectedCount}
-        onRetake={onRetakePhoto}
-        onAddAnother={onAddAnotherPhoto}
+        isDetecting={isDetecting}
+        onFileSelected={onFileSelected}
       />
-      <VoiceCapture isRecording={isRecording} onToggle={onToggleRecording} />
+      <VoiceCapture
+        sessionId={sessionId}
+        isRecording={isRecording}
+        onToggle={onToggleRecording}
+        onAdd={onAddIngredient}
+      />
       <TextCapture sessionId={sessionId} onAdd={onAddIngredient} />
     </div>
   )
