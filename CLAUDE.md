@@ -46,7 +46,7 @@ npm run typecheck  # tsc --noEmit
 
 ## Environment Setup
 
-Create `dev/.env`:
+Create `dev/.env` (backend):
 
 ```
 ANTHROPIC_API_KEY=your_key_here
@@ -58,6 +58,13 @@ SUPABASE_URL=https://....supabase.co
 SUPABASE_ANON_KEY=...
 FRONTEND_ORIGIN=http://localhost:5173
 RATE_LIMIT_RPM=20
+```
+
+Create `dev/frontend/.env.local` (frontend):
+
+```
+VITE_SUPABASE_URL=https://....supabase.co
+VITE_SUPABASE_ANON_KEY=...
 ```
 
 ## Architecture
@@ -74,8 +81,13 @@ models/                SQLAlchemy ORM: User, UserPreferences, PantrySession,
                          SessionIngredient, IngredientCatalog, NutritionCatalog,
                          RecipeCard, SavedRecipe (8 tables, all async)
 schemas/               Pydantic models for API boundaries (ingredient, session, user, recipe)
-migrations/            Alembic — one migration: 0001_initial_schema.py
 tests/test_api.py      Unit tests (no key) + @pytest.mark.integration tests (live Claude)
+```
+
+Alembic migrations live at `dev/backend/migrations/` (not inside `app/`):
+
+```
+migrations/versions/0001_initial_schema.py   All 8 tables
 ```
 
 > **Note:** Root-level `main.py`, `routes.py`, `config.py`, `anthropic_service.py` are legacy stubs. Working code lives in `app/`.
@@ -99,12 +111,15 @@ tests/test_api.py      Unit tests (no key) + @pytest.mark.integration tests (liv
 
 React 18 + TypeScript + Vite. Desktop-first at 1280×800 (mobile is Phase 2).
 
-**Routes** (`main.tsx`): `/` → `/signin`, `/signin` → `SignIn`, `/signup` → `SignUp`, `/app` → `IngredientInput`.
+**Routes** (`main.tsx`): `/` → `/signin`, `/signin` → `SignIn`, `/signup` → `SignUp`, `/auth/callback` → `AuthCallback`, `/app` → `IngredientInput` (guarded by `RequireAuth`).
 
 ```
-pages/SignIn.tsx             Auth sign-in form (placeholder nav — Supabase not wired)
-pages/SignUp.tsx             Auth sign-up form (placeholder nav — Supabase not wired)
+pages/SignIn.tsx             Auth sign-in (calls supabase.auth.signInWithPassword)
+pages/SignUp.tsx             Auth sign-up (calls supabase.auth.signUp)
+pages/AuthCallback.tsx       OAuth callback — ⚠️ bug: redirects to /signin instead of /app on success
 pages/IngredientInput.tsx    Main app page: Header + Stepper + 2-col layout (step 1)
+lib/supabase.ts              Supabase client (reads VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY)
+components/RequireAuth.tsx   Route guard — redirects to /signin if no Supabase session
 components/layout/           Header, Stepper (4 steps), AuthBrandPanel (left panel on auth pages)
 components/ingredients/      TriInputZone, PhotoCapture, VoiceCapture, TextCapture,
                                IngredientList, IngredientRow, AISuggestionRow,
@@ -143,7 +158,8 @@ styles/brand.css             All design tokens as CSS custom properties; dark mo
 
 ### What's Not Built Yet
 
-- Auth middleware (Supabase JWT) — SignIn/SignUp pages exist but navigate directly without real auth
+- Auth middleware (Supabase JWT) — SignIn/SignUp call Supabase but JWT is not validated server-side; `RequireAuth` guards routes client-side only
+- `AuthCallback` redirects to `/signin` instead of `/app` on successful OAuth (bug)
 - Preferences and Recipes pages (steps 3 & 4)
 - Session/CRUD route handlers (models defined, not wired to routes)
 - Image storage via Supabase Storage
