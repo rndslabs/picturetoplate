@@ -4,7 +4,7 @@ import Stepper from '../components/layout/Stepper'
 import TriInputZone from '../components/ingredients/TriInputZone'
 import IngredientList from '../components/ingredients/IngredientList'
 import type { SessionIngredientRead } from '../types/ingredient'
-import { mockSession } from '../mocks/ingredientSession'
+import { detectIngredients } from '../api/detectIngredients'
 
 const HELPER_CHIPS = [
   { label: 'Pantry staples on', dot: 'var(--sage)' },
@@ -14,8 +14,11 @@ const HELPER_CHIPS = [
 ] as const
 
 export default function IngredientInput() {
-  const [ingredients, setIngredients] = useState<SessionIngredientRead[]>(mockSession.ingredients)
-  const [isRecording, setIsRecording] = useState(false)
+  const [sessionId]    = useState(() => crypto.randomUUID())
+  const [ingredients, setIngredients] = useState<SessionIngredientRead[]>([])
+  const [isRecording,  setIsRecording]  = useState(false)
+  const [isDetecting,  setIsDetecting]  = useState(false)
+  const [photoError,   setPhotoError]   = useState<string | null>(null)
 
   function addIngredient(ing: SessionIngredientRead) {
     setIngredients(prev => [...prev, ing])
@@ -24,7 +27,7 @@ export default function IngredientInput() {
   function addSuggestion(name: string) {
     addIngredient({
       session_ingredient_id: `sugg-${Date.now()}`,
-      session_id:            mockSession.session_id,
+      session_id:            sessionId,
       catalog_ref:           null,
       name,
       quantity:              { amount: 1, unit: 'ea' },
@@ -38,6 +41,32 @@ export default function IngredientInput() {
 
   function clearAll() {
     setIngredients(prev => prev.map(i => ({ ...i, is_deleted: true })))
+  }
+
+  async function handleFileSelected(file: File) {
+    setPhotoError(null)
+    setIsDetecting(true)
+    try {
+      const names = await detectIngredients(file)
+      const now = new Date().toISOString()
+      const detected: SessionIngredientRead[] = names.map((name, idx) => ({
+        session_ingredient_id: `photo-${Date.now()}-${idx}`,
+        session_id:            sessionId,
+        catalog_ref:           null,
+        name:                  name.charAt(0).toUpperCase() + name.slice(1),
+        quantity:              { amount: 1, unit: 'ea' },
+        confidence_score:      null,
+        source:                'photo',
+        is_confirmed:          false,
+        is_deleted:            false,
+        added_at:              now,
+      }))
+      setIngredients(prev => [...prev, ...detected])
+    } catch (err) {
+      setPhotoError(err instanceof Error ? err.message : 'Photo detection failed.')
+    } finally {
+      setIsDetecting(false)
+    }
   }
 
   const detectedCount = ingredients.filter(i => i.source === 'photo' && !i.is_deleted).length
@@ -85,14 +114,21 @@ export default function IngredientInput() {
           </div>
 
           <TriInputZone
-            sessionId={mockSession.session_id}
+            sessionId={sessionId}
             detectedCount={detectedCount}
+            isDetecting={isDetecting}
             isRecording={isRecording}
             onToggleRecording={() => setIsRecording(r => !r)}
             onAddIngredient={addIngredient}
-            onRetakePhoto={() => {/* Phase 2: open file picker */}}
-            onAddAnotherPhoto={() => {/* Phase 2: open file picker */}}
+            onFileSelected={handleFileSelected}
           />
+
+          {/* Photo error */}
+          {photoError && (
+            <p className="p2p-mono" style={{ color: 'var(--tomato)', margin: 0 }}>
+              {photoError}
+            </p>
+          )}
 
           {/* Context chips */}
           <div className="flex gap-[10px] flex-wrap text-ink-2">
@@ -118,7 +154,6 @@ export default function IngredientInput() {
           onClearAll={clearAll}
           onAddSuggestion={addSuggestion}
           onFindRecipes={() => alert('Navigate to Preferences →')}
-          onSaveList={() => alert('Saving list…')}
         />
       </div>
     </div>

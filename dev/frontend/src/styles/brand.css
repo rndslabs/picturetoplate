@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Pic-to-Plate brand tokens — single source of truth for all CSS custom properties */
 :root {
   /* Surface colors */
@@ -137,6 +141,28 @@
   border: 1px solid var(--hairline);
   border-radius: 999px;
   padding: 13px 20px;
+}
+
+/* Auth form field — bottom-border style, sage focus */
+.p2p-field {
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid var(--hairline);
+  outline: none;
+  background: transparent;
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--ink);
+  padding: 10px 0;
+  transition: border-color 0.15s;
+}
+.p2p-field::placeholder {
+  color: var(--ink-3);
+  font-style: italic;
+}
+.p2p-field:focus {
+  border-bottom-color: var(--sage);
 }
 
 /* Global reset — no margin on body, full-height layout */

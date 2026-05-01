@@ -1,4 +1,27 @@
+import { useEffect, useState } from 'react'
+import { supabase } from '../../lib/supabase'
+
+function getInitials(name: string): string {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map(w => w[0].toUpperCase())
+    .join('')
+}
+
 export default function Header() {
+  const [initials, setInitials] = useState('')
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      const user = data.session?.user
+      if (!user) return
+      const name = user.user_metadata?.full_name as string | undefined
+      setInitials(name ? getInitials(name) : user.email?.[0].toUpperCase() ?? '?')
+    })
+  }, [])
+
   return (
     <header className="flex items-center justify-between px-10 py-5 border-b border-hairline-2">
       <div className="flex items-center gap-3">
@@ -24,7 +47,7 @@ export default function Header() {
           className="inline-flex items-center justify-center rounded-full bg-sage-soft text-sage-deep text-[13px] font-semibold"
           style={{ width: 32, height: 32 }}
         >
-          MK
+          {initials}
         </div>
       </div>
     </header>
